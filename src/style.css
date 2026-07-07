@@ -1,0 +1,260 @@
+:root {
+  --bg: #f4f7fa;
+  --panel: #ffffff;
+  --border: #dde5ec;
+  --text: #1d2b36;
+  --dim: #6b7c8a;
+  --primary: #0f6dbd;
+  --primary-dark: #0a558f;
+  --ok: #1d9a5b;
+  --warn: #c98a08;
+  --error: #c93a3a;
+  --radius: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Microsoft JhengHei", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+}
+
+/* ---------- 頂欄 ---------- */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 20px;
+  background: var(--primary-dark);
+  color: #fff;
+  flex-wrap: wrap;
+}
+
+.brand { display: flex; align-items: baseline; gap: 8px; }
+.brand-mark { font-size: 20px; }
+.brand-name { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+.brand-sub { font-size: 12px; opacity: 0.75; }
+
+.server-config { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.server-config input {
+  width: 280px;
+  padding: 5px 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.status-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #999;
+  display: inline-block;
+}
+.status-dot.ok { background: #3ddc84; }
+.status-dot.fail { background: #ff5c5c; }
+.status-dot.pending { background: #f5c542; animation: pulse 1s infinite; }
+@keyframes pulse { 50% { opacity: 0.4; } }
+
+/* ---------- 版面 ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 340px;
+  gap: 14px;
+  padding: 14px 20px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.panel h2 { margin: 0 0 12px; font-size: 15px; }
+.panel h3 { margin: 0 0 10px; font-size: 13px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.hint { color: var(--dim); font-size: 13px; }
+.hint.error, .error { color: var(--error); }
+.dim { color: var(--dim); font-size: 12px; }
+.hidden { display: none !important; }
+
+/* ---------- 按鈕與輸入 ---------- */
+.btn {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn.primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  font-weight: 600;
+}
+.btn.primary:hover:not(:disabled) { background: var(--primary-dark); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+input[type="text"], input[type="number"], textarea, select {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: inherit;
+  width: 100%;
+}
+textarea { resize: vertical; }
+
+/* ---------- 搜尋 ---------- */
+.search-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+
+.input-with-mic { display: flex; gap: 6px; }
+.input-with-mic input { flex: 1; }
+
+.mic-btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+.mic-btn.large { padding: 8px 14px; font-size: 13px; }
+.mic-btn.recording {
+  background: var(--error);
+  border-color: var(--error);
+  color: #fff;
+  animation: pulse 1.2s infinite;
+}
+.mic-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.search-results { display: flex; flex-direction: column; gap: 6px; max-height: 60vh; overflow-y: auto; }
+
+.patient-result {
+  text-align: left;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.patient-result:hover { border-color: var(--primary); background: #f0f7fd; }
+.pr-name { font-weight: 600; font-size: 14px; }
+.pr-meta { color: var(--dim); font-size: 12px; }
+
+/* ---------- 病人資訊 ---------- */
+.patient-header { padding-bottom: 12px; }
+.patient-header.empty { padding: 30px 0; text-align: center; }
+
+.pb-main { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.pb-name { font-size: 20px; font-weight: 700; }
+.pb-tags { display: flex; gap: 6px; }
+.tag {
+  background: #eaf2f9;
+  color: var(--primary-dark);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+/* ---------- 分頁 ---------- */
+.tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--border); margin-bottom: 12px; flex-wrap: wrap; }
+.tab {
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--dim);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
+.tab-content { min-height: 200px; }
+
+/* ---------- 資料表 ---------- */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  text-align: left;
+  padding: 8px;
+  color: var(--dim);
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td { padding: 8px; border-bottom: 1px solid #eef2f6; }
+.data-table .val { font-weight: 600; }
+
+.clinical-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.clinical-list li {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.cl-main { font-weight: 600; }
+.cl-main.allergy { color: var(--error); }
+
+.note-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 10px;
+}
+.note-text { margin-top: 6px; white-space: pre-wrap; }
+
+/* ---------- 輸入面板 ---------- */
+.entry-block { margin-bottom: 22px; }
+
+.vitals-form { display: flex; flex-direction: column; gap: 10px; }
+.field-row { display: flex; gap: 10px; }
+.field-row label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--dim);
+}
+
+.voice-controls { display: flex; gap: 8px; margin-bottom: 8px; }
+.voice-controls select { flex: 1; }
+
+.voice-status { min-height: 18px; font-size: 12px; color: var(--dim); margin-bottom: 6px; }
+
+#note-input { margin-bottom: 8px; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: var(--text);
+  color: #fff;
+  font-size: 13px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  z-index: 100;
+  max-width: 380px;
+}
+.toast.ok { background: var(--ok); }
+.toast.warn { background: var(--warn); }
+.toast.error { background: var(--error); }

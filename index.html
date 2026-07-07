@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POC-FHIR | Point of Care</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">⚕</span>
+      <span class="brand-name">POC-FHIR</span>
+      <span class="brand-sub">Point of Care</span>
+    </div>
+    <div class="server-config">
+      <label for="server-url">FHIR 伺服器</label>
+      <input id="server-url" type="text" value="https://hapi.fhir.org/baseR4" spellcheck="false" />
+      <span id="server-status" class="status-dot" title="尚未連線"></span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- 左欄:病人搜尋 -->
+    <aside class="panel search-panel">
+      <h2>病人搜尋</h2>
+      <form id="search-form" class="search-form">
+        <div class="input-with-mic">
+          <input id="search-input" type="text" placeholder="姓名或病人 ID…" autocomplete="off" />
+          <button type="button" class="mic-btn" data-mic-target="search-input" title="語音輸入">🎤</button>
+        </div>
+        <button type="submit" class="btn primary">搜尋</button>
+      </form>
+      <div id="search-results" class="search-results">
+        <p class="hint">輸入病人姓名(例如 "Smith")或 ID 進行搜尋。</p>
+      </div>
+    </aside>
+
+    <!-- 中欄:病人資訊與臨床資料 -->
+    <section class="panel patient-panel">
+      <div id="patient-header" class="patient-header empty">
+        <p class="hint">尚未選擇病人</p>
+      </div>
+
+      <div id="clinical-tabs" class="tabs hidden">
+        <button class="tab active" data-tab="vitals">生命徵象</button>
+        <button class="tab" data-tab="conditions">診斷</button>
+        <button class="tab" data-tab="medications">用藥</button>
+        <button class="tab" data-tab="allergies">過敏</button>
+        <button class="tab" data-tab="notes">臨床紀錄</button>
+      </div>
+
+      <div id="tab-content" class="tab-content"></div>
+    </section>
+
+    <!-- 右欄:資料輸入 -->
+    <aside class="panel entry-panel">
+      <h2>床邊記錄</h2>
+
+      <div class="entry-block">
+        <h3>生命徵象輸入</h3>
+        <form id="vitals-form" class="vitals-form">
+          <div class="field-row">
+            <label>收縮壓 <input name="sbp" type="number" min="40" max="300" placeholder="mmHg" /></label>
+            <label>舒張壓 <input name="dbp" type="number" min="20" max="200" placeholder="mmHg" /></label>
+          </div>
+          <div class="field-row">
+            <label>心率 <input name="hr" type="number" min="20" max="300" placeholder="bpm" /></label>
+            <label>體溫 <input name="temp" type="number" step="0.1" min="30" max="45" placeholder="°C" /></label>
+          </div>
+          <div class="field-row">
+            <label>SpO₂ <input name="spo2" type="number" min="50" max="100" placeholder="%" /></label>
+            <label>呼吸 <input name="rr" type="number" min="4" max="80" placeholder="/min" /></label>
+          </div>
+          <button type="submit" class="btn primary" disabled>寫入 FHIR</button>
+        </form>
+      </div>
+
+      <div class="entry-block">
+        <h3>臨床紀錄(可語音輸入)</h3>
+        <div class="voice-controls">
+          <select id="voice-lang">
+            <option value="zh-TW">中文(台灣)</option>
+            <option value="en-US">English (US)</option>
+          </select>
+          <button id="note-mic" type="button" class="mic-btn large" data-mic-target="note-input" title="按住說話或點擊開始/停止">🎤 語音輸入</button>
+        </div>
+        <div id="voice-status" class="voice-status"></div>
+        <textarea id="note-input" rows="6" placeholder="輸入或口述臨床紀錄…"></textarea>
+        <button id="save-note" class="btn primary" disabled>儲存紀錄至 FHIR</button>
+      </div>
+
+      <div id="toast" class="toast hidden"></div>
+    </aside>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
