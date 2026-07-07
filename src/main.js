@@ -185,6 +185,78 @@ function renderTab() {
   $('#tab-content').innerHTML = views[state.activeTab]();
 }
 
+// ---------- 隨機測試資料 ----------
+function randomNumber(min, max, decimals = 0) {
+  const factor = 10 ** decimals;
+  return Math.round((min + Math.random() * (max - min)) * factor) / factor;
+}
+
+function randomItem(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
+function testScenario() {
+  const roll = Math.random();
+  if (roll < 0.68) return 'normal';
+  if (roll < 0.80) return 'fever';
+  if (roll < 0.90) return 'hypertension';
+  if (roll < 0.98) return 'hypoxemia';
+  return 'hypothermia';
+}
+
+function generateTestVitals() {
+  const scenario = testScenario();
+  const profiles = {
+    normal:       { sbp: [105, 135], dbp: [65, 85],  hr: [60, 95],  temp: [36.1, 37.4], spo2: [95, 100], rr: [12, 20] },
+    fever:        { sbp: [105, 145], dbp: [65, 90],  hr: [90, 125], temp: [38.0, 39.5], spo2: [93, 99],  rr: [18, 28] },
+    hypertension: { sbp: [145, 190], dbp: [90, 115], hr: [65, 105], temp: [36.1, 37.5], spo2: [94, 100], rr: [12, 22] },
+    hypoxemia:     { sbp: [100, 145], dbp: [60, 90],  hr: [85, 125], temp: [36.0, 38.3], spo2: [86, 93],  rr: [22, 34] },
+    hypothermia:   { sbp: [90, 130],  dbp: [55, 85],  hr: [40, 68],  temp: [30.5, 34.0], spo2: [90, 97],  rr: [8, 18] },
+  };
+  const profile = profiles[scenario];
+  const respiratorySupport = scenario === 'hypoxemia'
+    ? randomItem(['鼻導管', '簡單面罩', '高流量鼻導管'])
+    : '室內空氣';
+  const gcsReduced = ['hypoxemia', 'hypothermia'].includes(scenario) && Math.random() < 0.55;
+
+  return {
+    sbp: randomNumber(...profile.sbp),
+    dbp: randomNumber(...profile.dbp),
+    hr: randomNumber(...profile.hr),
+    temp: randomNumber(...profile.temp, 1),
+    spo2: randomNumber(...profile.spo2),
+    rr: randomNumber(...profile.rr),
+    pain: randomNumber(0, scenario === 'fever' ? 6 : 4),
+    glucose: randomNumber(75, Math.random() < 0.15 ? 220 : 145),
+    weight: randomNumber(45, 110, 1),
+    height: randomNumber(150, 190, 1),
+    oxygenFlow: respiratorySupport === '室內空氣' ? 0 : randomNumber(1, 8, 1),
+    fio2: respiratorySupport === '室內空氣' ? 21 : randomNumber(24, 50),
+    respiratorySupport,
+    avpu: gcsReduced ? randomItem(['對聲音有反應（Voice）', '對疼痛有反應（Pain）']) : '清醒（Alert）',
+    gcsEye: gcsReduced ? randomItem([3, 4]) : 4,
+    gcsVerbal: gcsReduced ? randomItem([3, 4]) : 5,
+    gcsMotor: gcsReduced ? randomItem([5, 6]) : 6,
+    leftPupil: Math.random() < 0.08 ? '反應遲緩' : '正常反應',
+    rightPupil: Math.random() < 0.08 ? '反應遲緩' : '正常反應',
+    fluidIntake: randomNumber(100, 1000),
+    urineOutput: randomNumber(50, 600),
+    capillaryRefill: ['hypoxemia', 'hypothermia'].includes(scenario) && Math.random() < 0.6 ? '> 2 秒' : '≤ 2 秒',
+  };
+}
+
+$('#generate-test-vitals').addEventListener('click', () => {
+  const form = $('#vitals-form');
+  const values = generateTestVitals();
+  form.reset();
+  for (const [name, value] of Object.entries(values)) {
+    const field = form.elements.namedItem(name);
+    if (field) field.value = value;
+  }
+  form.querySelectorAll('.optional-section').forEach(section => { section.open = true; });
+  toast('已產生一組隨機測試值，尚未寫入 FHIR。', 'info');
+});
+
 // ---------- 生命徵象寫入 ----------
 $('#vitals-form').addEventListener('submit', async (e) => {
   e.preventDefault();

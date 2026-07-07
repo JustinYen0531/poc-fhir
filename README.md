@@ -9,6 +9,7 @@
 - **臨床資料檢視**:生命徵象(`Observation`)、診斷(`Condition`)、用藥(`MedicationRequest`)、過敏(`AllergyIntolerance`)、臨床紀錄(`DocumentReference`)。
 - **護理床邊記錄**:血壓、心率、體溫、SpO₂、呼吸、疼痛、血糖、身高體重與 BMI、氧療、GCS、AVPU、輸入輸出、瞳孔及末梢循環評估,寫回 FHIR `Observation`。
 - **FHIR JSON 匯出**:可匯出目前病人的完整 FHIR `Bundle`,或只匯出床邊 `Observation`;選填的床邊評估以收合區塊呈現。
+- **隨機測試資料**:一鍵填入多數正常、偶有合理異常且彼此相關的床邊數值;只填表單,不會自動寫入 FHIR。
 - **臨床紀錄語音輸入**:透過 Web Speech API 口述紀錄(支援中文/英文),儲存為 `DocumentReference`。
 - **可切換 FHIR 伺服器**:預設連到公開測試伺服器 `https://hapi.fhir.org/baseR4`,可在頂欄改為自己的伺服器。
 
