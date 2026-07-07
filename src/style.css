@@ -310,6 +310,13 @@ textarea { resize: vertical; }
 
 .voice-status { min-height: 18px; font-size: 12px; color: var(--dim); margin-bottom: 6px; }
 
+.ocr-controls { display: flex; gap: 8px; margin-bottom: 6px; }
+.ocr-controls .btn { flex: 1; text-align: center; }
+.ocr-file-label { cursor: pointer; }
+#note-image { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.ocr-status { min-height: 18px; font-size: 12px; color: var(--dim); margin-bottom: 6px; overflow-wrap: anywhere; }
+.ocr-hint { margin: 0 0 8px; color: var(--dim); font-size: 11px; line-height: 1.4; }
+
 #note-input { margin-bottom: 8px; }
 
 /* ---------- Toast ---------- */

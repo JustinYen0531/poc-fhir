@@ -195,7 +195,7 @@
       </div>
 
       <div class="entry-block">
-        <h3>臨床紀錄(可語音輸入)</h3>
+        <h3>臨床紀錄（語音／圖片辨識）</h3>
         <div class="voice-controls">
           <select id="voice-lang">
             <option value="zh-TW">中文(台灣)</option>
@@ -204,7 +204,14 @@
           <button id="note-mic" type="button" class="mic-btn large" data-mic-target="note-input" title="按住說話或點擊開始/停止">🎤 語音輸入</button>
         </div>
         <div id="voice-status" class="voice-status"></div>
-        <textarea id="note-input" rows="6" placeholder="輸入或口述臨床紀錄…"></textarea>
+        <div class="ocr-controls">
+          <label for="note-image" class="btn ocr-file-label">📷 拍照／選擇圖片</label>
+          <input id="note-image" type="file" accept="image/*" capture="environment" />
+          <button id="run-ocr" type="button" class="btn" disabled>辨識文字</button>
+        </div>
+        <div id="ocr-status" class="ocr-status" aria-live="polite"></div>
+        <textarea id="note-input" rows="6" placeholder="輸入、口述或從圖片辨識臨床紀錄…"></textarea>
+        <p class="ocr-hint">圖片僅在此裝置進行辨識；請核對內容後再儲存至 FHIR。</p>
         <button id="save-note" class="btn primary" disabled>儲存紀錄至 FHIR</button>
       </div>
 

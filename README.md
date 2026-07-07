@@ -1,6 +1,6 @@
-# POC-FHIR — Point of Care 與 FHIR 連動 + 語音輸入
+# POC-FHIR — Point of Care 與 FHIR 連動 + 多模態輸入
 
-床邊照護(Point of Care)網頁應用,直接與 FHIR R4 伺服器連動,並支援瀏覽器語音輸入。
+床邊照護(Point of Care)網頁應用,直接與 FHIR R4 伺服器連動,並支援瀏覽器語音與圖片文字輸入。
 
 ## 功能
 
@@ -11,6 +11,7 @@
 - **FHIR JSON 匯出**:可匯出目前病人的完整 FHIR `Bundle`,或只匯出床邊 `Observation`;選填的床邊評估以收合區塊呈現。
 - **隨機測試資料**:一鍵填入多數正常、偶有合理異常且彼此相關的床邊數值;只填表單,不會自動寫入 FHIR。
 - **臨床紀錄語音輸入**:透過 Web Speech API 口述紀錄(支援中文/英文),儲存為 `DocumentReference`。
+- **臨床紀錄圖片辨識**:透過 Tesseract.js 在使用者裝置內辨識繁體中文／英文圖片文字，人工核對後再儲存為 `DocumentReference`。
 - **可切換 FHIR 伺服器**:預設連到公開測試伺服器 `https://hapi.fhir.org/baseR4`,可在頂欄改為自己的伺服器。
 
 ## 快速開始

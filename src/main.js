@@ -1,5 +1,6 @@
 import * as fhir from './fhir.js';
 import * as voice from './voice.js';
+import * as ocr from './ocr.js';
 import * as render from './render.js';
 
 const $ = sel => document.querySelector(sel);
@@ -305,6 +306,48 @@ $('#save-note').addEventListener('click', async () => {
   } finally {
     btn.disabled = false;
     btn.textContent = '儲存紀錄至 FHIR';
+  }
+});
+
+// ---------- 圖片文字辨識 ----------
+const noteImage = $('#note-image');
+const runOcrButton = $('#run-ocr');
+
+noteImage.addEventListener('change', () => {
+  const file = noteImage.files?.[0];
+  runOcrButton.disabled = !file;
+  $('#ocr-status').textContent = file ? `已選擇：${file.name}` : '';
+});
+
+runOcrButton.addEventListener('click', async () => {
+  const file = noteImage.files?.[0];
+  if (!file) return;
+
+  const statusEl = $('#ocr-status');
+  runOcrButton.disabled = true;
+  runOcrButton.textContent = '辨識中…';
+  statusEl.textContent = '正在載入中文／英文辨識模型…';
+
+  try {
+    const text = await ocr.recognizeClinicalNote(file, progress => {
+      statusEl.textContent = `正在辨識文字… ${progress}%`;
+    });
+    if (!text) {
+      throw new Error('圖片中沒有辨識到文字，請換一張較清晰的圖片。');
+    }
+
+    const noteInput = $('#note-input');
+    const existingText = noteInput.value.trimEnd();
+    noteInput.value = existingText ? `${existingText}\n${text}` : text;
+    noteInput.dispatchEvent(new Event('input', { bubbles: true }));
+    statusEl.textContent = '辨識完成，請核對下方文字後再儲存。';
+    toast('圖片文字已加入臨床紀錄，尚未寫入 FHIR。', 'ok');
+  } catch (err) {
+    statusEl.textContent = `⚠ ${err.message}`;
+    toast(`圖片辨識失敗：${err.message}`, 'error');
+  } finally {
+    runOcrButton.disabled = false;
+    runOcrButton.textContent = '重新辨識';
   }
 });
 
