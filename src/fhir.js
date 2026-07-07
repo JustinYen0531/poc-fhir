@@ -41,6 +41,25 @@ export async function searchPatients(query) {
   return (bundle.entry || []).map(e => e.resource);
 }
 
+/** 建立新的 Patient，由 FHIR 伺服器配置唯一的資源 ID。 */
+export async function createPatient(values) {
+  const patient = {
+    resourceType: 'Patient',
+    active: true,
+    name: [{
+      use: 'official',
+      family: values.family.trim(),
+      given: [values.given.trim()],
+    }],
+    gender: values.gender || 'unknown',
+    ...(values.birthDate ? { birthDate: values.birthDate } : {}),
+  };
+
+  const created = await request('/Patient', { method: 'POST', body: JSON.stringify(patient) });
+  if (!created.id) throw new Error('伺服器已回應，但未提供新病人 ID');
+  return created;
+}
+
 export async function getPatientEverything(patientId) {
   const [vitals, conditions, medications, allergies, notes] = await Promise.all([
     request(`/Observation?patient=${patientId}&category=vital-signs&_sort=-date&_count=30`),

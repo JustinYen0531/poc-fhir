@@ -106,7 +106,7 @@ body {
 .btn.primary:hover:not(:disabled) { background: var(--primary-dark); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-input[type="text"], input[type="number"], textarea, select {
+input[type="text"], input[type="number"], input[type="date"], textarea, select {
   padding: 8px 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -140,6 +140,20 @@ textarea { resize: vertical; }
 .mic-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .search-results { display: flex; flex-direction: column; gap: 6px; max-height: 60vh; overflow-y: auto; }
+
+.create-patient-block {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.create-patient-form { display: flex; flex-direction: column; gap: 10px; }
+.create-patient-form > label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--dim);
+  font-size: 12px;
+}
 
 .patient-result {
   text-align: left;

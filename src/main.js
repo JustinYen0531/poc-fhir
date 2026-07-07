@@ -60,6 +60,27 @@ $('#search-results').addEventListener('click', (e) => {
   if (btn) selectPatient(btn.dataset.patientId);
 });
 
+// ---------- 新病人建立 ----------
+$('#create-patient-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const values = Object.fromEntries(new FormData(form).entries());
+  const btn = form.querySelector('button[type=submit]');
+  btn.disabled = true;
+  btn.textContent = '建立中…';
+  try {
+    const patient = await fhir.createPatient(values);
+    form.reset();
+    await activatePatient(patient);
+    toast(`已建立新病人，FHIR ID：${patient.id}`, 'ok');
+  } catch (err) {
+    toast(`建立病人失敗:${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '建立並選取新病人';
+  }
+});
+
 // ---------- 病人選取與資料載入 ----------
 async function selectPatient(patientId) {
   const header = $('#patient-header');
@@ -69,15 +90,21 @@ async function selectPatient(patientId) {
   try {
     const res = await fetch(`${fhir.getBaseUrl()}/Patient/${patientId}`, { headers: { Accept: 'application/fhir+json' } });
     if (!res.ok) throw new Error(`無法讀取病人 (${res.status})`);
-    state.patient = await res.json();
-    header.innerHTML = render.patientBanner(state.patient);
-    $('#clinical-tabs').classList.remove('hidden');
-    $('#vitals-form button[type=submit]').disabled = false;
-    $('#save-note').disabled = false;
-    await refreshClinicalData();
+    await activatePatient(await res.json());
   } catch (err) {
     header.innerHTML = `<p class="hint error">${err.message}</p>`;
   }
+}
+
+async function activatePatient(patient) {
+  state.patient = patient;
+  const header = $('#patient-header');
+  header.classList.remove('empty');
+  header.innerHTML = render.patientBanner(patient);
+  $('#clinical-tabs').classList.remove('hidden');
+  $('#vitals-form button[type=submit]').disabled = false;
+  $('#save-note').disabled = false;
+  await refreshClinicalData();
 }
 
 async function refreshClinicalData() {

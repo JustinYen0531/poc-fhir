@@ -34,6 +34,27 @@
       <div id="search-results" class="search-results">
         <p class="hint">輸入病人姓名(例如 "Smith")或 ID 進行搜尋。</p>
       </div>
+
+      <div class="create-patient-block">
+        <h3>建立新病人</h3>
+        <p class="hint">由 FHIR 伺服器產生全新的病人 ID。</p>
+        <form id="create-patient-form" class="create-patient-form">
+          <div class="field-row">
+            <label>姓氏 <input name="family" type="text" required autocomplete="family-name" /></label>
+            <label>名字 <input name="given" type="text" required autocomplete="given-name" /></label>
+          </div>
+          <label>性別
+            <select name="gender">
+              <option value="unknown">不詳</option>
+              <option value="male">男</option>
+              <option value="female">女</option>
+              <option value="other">其他</option>
+            </select>
+          </label>
+          <label>出生日期 <input name="birthDate" type="date" /></label>
+          <button type="submit" class="btn primary">建立並選取新病人</button>
+        </form>
+      </div>
     </aside>
 
     <!-- 中欄:病人資訊與臨床資料 -->
