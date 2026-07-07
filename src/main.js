@@ -98,12 +98,14 @@ async function selectPatient(patientId) {
 
 async function activatePatient(patient) {
   state.patient = patient;
+  state.data = null;
   const header = $('#patient-header');
   header.classList.remove('empty');
   header.innerHTML = render.patientBanner(patient);
   $('#clinical-tabs').classList.remove('hidden');
   $('#vitals-form button[type=submit]').disabled = false;
   $('#save-note').disabled = false;
+  $('#export-actions').classList.add('hidden');
   await refreshClinicalData();
 }
 
@@ -114,10 +116,51 @@ async function refreshClinicalData() {
   try {
     state.data = await fhir.getPatientEverything(state.patient.id);
     renderTab();
+    $('#export-actions').classList.remove('hidden');
   } catch (err) {
     content.innerHTML = `<p class="hint error">載入失敗:${err.message}</p>`;
   }
 }
+
+// ---------- FHIR JSON 匯出 ----------
+function createCollectionBundle(resources) {
+  return {
+    resourceType: 'Bundle',
+    type: 'collection',
+    timestamp: new Date().toISOString(),
+    total: resources.length,
+    entry: resources.map(resource => ({
+      ...(resource.id ? { fullUrl: `${fhir.getBaseUrl()}/${resource.resourceType}/${resource.id}` } : {}),
+      resource,
+    })),
+  };
+}
+
+function downloadFhirJson(bundle, filename) {
+  const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/fhir+json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+$('#export-bundle').addEventListener('click', () => {
+  if (!state.patient || !state.data) return;
+  const resources = [state.patient, ...Object.values(state.data).flat()];
+  downloadFhirJson(createCollectionBundle(resources), `patient-${state.patient.id}-fhir-bundle.json`);
+  toast(`已匯出完整 FHIR Bundle（${resources.length} 筆資源）。`, 'ok');
+});
+
+$('#export-observations').addEventListener('click', () => {
+  if (!state.patient || !state.data) return;
+  const observations = state.data.vitals;
+  downloadFhirJson(createCollectionBundle(observations), `patient-${state.patient.id}-observations.json`);
+  toast(`已匯出床邊 Observation（${observations.length} 筆）。`, 'ok');
+});
 
 // ---------- 分頁 ----------
 document.querySelectorAll('.tab').forEach(tab => {

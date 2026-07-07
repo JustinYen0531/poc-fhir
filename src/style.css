@@ -171,8 +171,17 @@ textarea { resize: vertical; }
 .pr-meta { color: var(--dim); font-size: 12px; }
 
 /* ---------- 病人資訊 ---------- */
+.patient-toolbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 .patient-header { padding-bottom: 12px; }
 .patient-header.empty { padding: 30px 0; text-align: center; }
+.export-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.export-actions .btn { font-size: 12px; padding: 6px 10px; }
 
 .pb-main { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .pb-name { font-size: 20px; font-weight: 700; }
@@ -262,6 +271,37 @@ textarea { resize: vertical; }
   color: var(--dim);
 }
 .gcs-row { gap: 6px; }
+.optional-section {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fbfcfd;
+}
+.optional-section summary {
+  padding: 9px 10px;
+  color: var(--primary-dark);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+.optional-section summary span {
+  float: right;
+  color: var(--dim);
+  font-size: 11px;
+  font-weight: 400;
+}
+.optional-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 2px 10px 10px;
+}
+.optional-fields > label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--dim);
+  font-size: 12px;
+}
 
 .voice-controls { display: flex; gap: 8px; margin-bottom: 8px; }
 .voice-controls select { flex: 1; }
