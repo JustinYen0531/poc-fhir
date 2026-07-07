@@ -37,6 +37,21 @@ async function checkServer() {
   }
 }
 
+$('#server-preset').addEventListener('change', (e) => {
+  if (e.target.value === 'custom') {
+    $('#server-url').focus();
+    return;
+  }
+  $('#server-url').value = e.target.value;
+  checkServer();
+});
+
+$('#server-url').addEventListener('input', (e) => {
+  const preset = $('#server-preset');
+  const matchingOption = [...preset.options].find(option => option.value === e.target.value.trim());
+  preset.value = matchingOption ? matchingOption.value : 'custom';
+});
+
 $('#server-url').addEventListener('change', checkServer);
 
 // ---------- 病人搜尋 ----------

@@ -14,7 +14,13 @@
       <span class="brand-sub">Point of Care</span>
     </div>
     <div class="server-config">
-      <label for="server-url">FHIR 伺服器</label>
+      <label for="server-preset">FHIR 伺服器</label>
+      <select id="server-preset" aria-label="常用 FHIR 伺服器">
+        <option value="https://hapi.fhir.org/baseR4" selected>HAPI FHIR R4（公開測試）</option>
+        <option value="https://server.fire.ly/r4">Firely R4（公開測試）</option>
+        <option value="http://try.smilecdr.com:8000/baseR4">Smile CDR R4（僅限 HTTP）</option>
+        <option value="custom">自訂網址</option>
+      </select>
       <input id="server-url" type="text" value="https://hapi.fhir.org/baseR4" spellcheck="false" />
       <span id="server-status" class="status-dot" title="尚未連線"></span>
     </div>
