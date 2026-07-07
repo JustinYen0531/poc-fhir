@@ -1,6 +1,5 @@
 import * as fhir from './fhir.js';
 import * as voice from './voice.js';
-import * as ocr from './ocr.js';
 import * as render from './render.js';
 
 const $ = sel => document.querySelector(sel);
@@ -344,7 +343,9 @@ runOcrButton.addEventListener('click', async () => {
   statusEl.textContent = '正在載入中文／英文辨識模型…';
 
   try {
-    const text = await ocr.recognizeClinicalNote(file, progress => {
+    // OCR 套件僅在使用者按下辨識時載入，避免它阻斷 FHIR 核心功能啟動。
+    const { recognizeClinicalNote } = await import('./ocr.js');
+    const text = await recognizeClinicalNote(file, progress => {
       statusEl.textContent = `正在辨識文字… ${progress}%`;
     });
     if (!text) {
