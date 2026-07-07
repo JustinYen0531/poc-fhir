@@ -152,6 +152,11 @@ $('#vitals-form').addEventListener('submit', async (e) => {
     toast('請至少填寫一項生命徵象。', 'warn');
     return;
   }
+  const gcsValues = [values.gcsEye, values.gcsVerbal, values.gcsMotor];
+  if (gcsValues.some(Boolean) && !gcsValues.every(Boolean)) {
+    toast('GCS 請完整填寫睜眼、語言與動作三項。', 'warn');
+    return;
+  }
   const btn = form.querySelector('button[type=submit]');
   btn.disabled = true;
   btn.textContent = '寫入中…';

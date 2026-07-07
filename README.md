@@ -7,7 +7,7 @@
 - **病人搜尋**:以姓名或 ID 搜尋 FHIR `Patient` 資源(搜尋框也支援語音輸入)。
 - **建立新病人**:新增 `Patient` 資源,由 FHIR 伺服器產生全新的病人 ID,建立後自動選取。
 - **臨床資料檢視**:生命徵象(`Observation`)、診斷(`Condition`)、用藥(`MedicationRequest`)、過敏(`AllergyIntolerance`)、臨床紀錄(`DocumentReference`)。
-- **生命徵象床邊輸入**:血壓(FHIR 標準 component 寫法)、心率、體溫、SpO₂、呼吸速率,寫回 FHIR 伺服器,使用 LOINC 編碼。
+- **護理床邊記錄**:血壓、心率、體溫、SpO₂、呼吸、疼痛、血糖、身高體重與 BMI、氧療、GCS、AVPU、輸入輸出、瞳孔及末梢循環評估,寫回 FHIR `Observation`。
 - **臨床紀錄語音輸入**:透過 Web Speech API 口述紀錄(支援中文/英文),儲存為 `DocumentReference`。
 - **可切換 FHIR 伺服器**:預設連到公開測試伺服器 `https://hapi.fhir.org/baseR4`,可在頂欄改為自己的伺服器。
 

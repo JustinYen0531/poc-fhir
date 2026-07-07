@@ -81,6 +81,7 @@
       <div class="entry-block">
         <h3>生命徵象輸入</h3>
         <form id="vitals-form" class="vitals-form">
+          <h4>基本生命徵象</h4>
           <div class="field-row">
             <label>收縮壓 <input name="sbp" type="number" min="40" max="300" placeholder="mmHg" /></label>
             <label>舒張壓 <input name="dbp" type="number" min="20" max="200" placeholder="mmHg" /></label>
@@ -93,6 +94,77 @@
             <label>SpO₂ <input name="spo2" type="number" min="50" max="100" placeholder="%" /></label>
             <label>呼吸 <input name="rr" type="number" min="4" max="80" placeholder="/min" /></label>
           </div>
+
+          <h4>疼痛、血糖與身體測量</h4>
+          <div class="field-row">
+            <label>疼痛分數 <input name="pain" type="number" min="0" max="10" placeholder="0–10" /></label>
+            <label>血糖 <input name="glucose" type="number" min="0" max="1000" step="0.1" placeholder="mg/dL" /></label>
+          </div>
+          <div class="field-row">
+            <label>體重 <input name="weight" type="number" min="0.5" max="500" step="0.1" placeholder="kg" /></label>
+            <label>身高 <input name="height" type="number" min="20" max="260" step="0.1" placeholder="cm" /></label>
+          </div>
+
+          <h4>氧療與呼吸輔助</h4>
+          <div class="field-row">
+            <label>氧氣流量 <input name="oxygenFlow" type="number" min="0" max="100" step="0.1" placeholder="L/min" /></label>
+            <label>FiO₂ <input name="fio2" type="number" min="21" max="100" step="0.1" placeholder="%" /></label>
+          </div>
+          <label>呼吸輔助方式
+            <select name="respiratorySupport">
+              <option value="">未記錄</option>
+              <option value="室內空氣">室內空氣</option>
+              <option value="鼻導管">鼻導管</option>
+              <option value="簡單面罩">簡單面罩</option>
+              <option value="非再吸入型面罩">非再吸入型面罩</option>
+              <option value="高流量鼻導管">高流量鼻導管</option>
+              <option value="非侵入性呼吸器">非侵入性呼吸器</option>
+              <option value="侵入性呼吸器">侵入性呼吸器</option>
+            </select>
+          </label>
+
+          <h4>神經學評估</h4>
+          <label>意識狀態（AVPU）
+            <select name="avpu">
+              <option value="">未記錄</option>
+              <option value="清醒（Alert）">清醒（Alert）</option>
+              <option value="對聲音有反應（Voice）">對聲音有反應（Voice）</option>
+              <option value="對疼痛有反應（Pain）">對疼痛有反應（Pain）</option>
+              <option value="無反應（Unresponsive）">無反應（Unresponsive）</option>
+            </select>
+          </label>
+          <div class="field-row gcs-row">
+            <label>GCS 睜眼
+              <select name="gcsEye"><option value="">—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
+            </label>
+            <label>GCS 語言
+              <select name="gcsVerbal"><option value="">—</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
+            </label>
+            <label>GCS 動作
+              <select name="gcsMotor"><option value="">—</option><option value="6">6</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
+            </label>
+          </div>
+          <div class="field-row">
+            <label>左瞳孔
+              <select name="leftPupil"><option value="">未記錄</option><option value="正常反應">正常反應</option><option value="反應遲緩">反應遲緩</option><option value="無反應">無反應</option></select>
+            </label>
+            <label>右瞳孔
+              <select name="rightPupil"><option value="">未記錄</option><option value="正常反應">正常反應</option><option value="反應遲緩">反應遲緩</option><option value="無反應">無反應</option></select>
+            </label>
+          </div>
+
+          <h4>輸入輸出與末梢循環</h4>
+          <div class="field-row">
+            <label>輸入量 <input name="fluidIntake" type="number" min="0" max="50000" step="1" placeholder="mL" /></label>
+            <label>尿量 <input name="urineOutput" type="number" min="0" max="50000" step="1" placeholder="mL" /></label>
+          </div>
+          <label>微血管回填時間
+            <select name="capillaryRefill">
+              <option value="">未記錄</option>
+              <option value="≤ 2 秒">≤ 2 秒</option>
+              <option value="> 2 秒">&gt; 2 秒</option>
+            </select>
+          </label>
           <button type="submit" class="btn primary" disabled>寫入 FHIR</button>
         </form>
       </div>

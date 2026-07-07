@@ -51,10 +51,17 @@ function obsValue(obs) {
     return `${obs.valueQuantity.value} ${obs.valueQuantity.unit || ''}`;
   }
   if (obs.component?.length) {
-    return obs.component
-      .map(c => `${c.code?.coding?.[0]?.display || c.code?.text || ''}: ${c.valueQuantity ? `${c.valueQuantity.value} ${c.valueQuantity.unit || ''}` : '—'}`)
+    const components = obs.component
+      .map(c => {
+        const value = c.valueQuantity
+          ? `${c.valueQuantity.value} ${c.valueQuantity.unit || ''}`
+          : c.valueInteger ?? c.valueString ?? '—';
+        return `${c.code?.coding?.[0]?.display || c.code?.text || ''}: ${value}`;
+      })
       .join(' / ');
+    return obs.valueInteger !== undefined ? `總分 ${obs.valueInteger}（${components}）` : components;
   }
+  if (obs.valueInteger !== undefined) return String(obs.valueInteger);
   if (obs.valueString) return obs.valueString;
   if (obs.valueCodeableConcept) return obs.valueCodeableConcept.text || obs.valueCodeableConcept.coding?.[0]?.display || '—';
   return '—';

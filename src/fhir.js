@@ -84,6 +84,20 @@ const VITAL_CODES = {
   temp: { code: '8310-5',  display: 'Body temperature',          unit: 'Cel',   ucum: 'Cel' },
   spo2: { code: '2708-6',  display: 'Oxygen saturation',         unit: '%',     ucum: '%' },
   rr:   { code: '9279-1',  display: 'Respiratory rate',          unit: '/min',  ucum: '/min' },
+  pain: { code: '72514-3', display: 'Pain severity score',        unit: 'score', ucum: '{score}' },
+  glucose: { code: '2339-0', display: 'Blood glucose',            unit: 'mg/dL', ucum: 'mg/dL' },
+  weight: { code: '29463-7', display: 'Body weight',               unit: 'kg',    ucum: 'kg' },
+  height: { code: '8302-2', display: 'Body height',               unit: 'cm',    ucum: 'cm' },
+  oxygenFlow: { code: '3151-8', display: 'Inhaled oxygen flow rate', unit: 'L/min', ucum: 'L/min' },
+  fio2: { code: '3150-0', display: 'Inhaled oxygen concentration', unit: '%',     ucum: '%' },
+};
+
+const TEXT_ASSESSMENTS = {
+  respiratorySupport: 'Respiratory support method',
+  avpu: 'AVPU consciousness assessment',
+  leftPupil: 'Left pupil response',
+  rightPupil: 'Right pupil response',
+  capillaryRefill: 'Capillary refill time',
 };
 
 function vitalsMeta() {
@@ -144,6 +158,60 @@ export async function recordVitals(patientId, values) {
         system: 'http://unitsofmeasure.org',
         code: meta.ucum,
       },
+    });
+  }
+
+  if (values.weight && values.height) {
+    const heightMeters = Number(values.height) / 100;
+    const bmi = Number(values.weight) / (heightMeters * heightMeters);
+    observations.push({
+      resourceType: 'Observation',
+      ...vitalsMeta(),
+      code: { coding: [{ system: 'http://loinc.org', code: '39156-5', display: 'Body mass index' }], text: 'Body mass index' },
+      subject: { reference: `Patient/${patientId}` },
+      valueQuantity: { value: Number(bmi.toFixed(1)), unit: 'kg/m²', system: 'http://unitsofmeasure.org', code: 'kg/m2' },
+    });
+  }
+
+  const gcsParts = [values.gcsEye, values.gcsVerbal, values.gcsMotor];
+  if (gcsParts.every(Boolean)) {
+    const gcsComponents = [
+      { code: '9267-6', display: 'Glasgow coma score eye opening', value: values.gcsEye },
+      { code: '9270-0', display: 'Glasgow coma score verbal', value: values.gcsVerbal },
+      { code: '9268-4', display: 'Glasgow coma score motor', value: values.gcsMotor },
+    ];
+    observations.push({
+      resourceType: 'Observation',
+      ...vitalsMeta(),
+      code: { coding: [{ system: 'http://loinc.org', code: '9269-2', display: 'Glasgow coma score total' }], text: 'Glasgow coma score' },
+      subject: { reference: `Patient/${patientId}` },
+      valueInteger: gcsParts.reduce((total, value) => total + Number(value), 0),
+      component: gcsComponents.map(item => ({
+        code: { coding: [{ system: 'http://loinc.org', code: item.code, display: item.display }] },
+        valueInteger: Number(item.value),
+      })),
+    });
+  }
+
+  for (const [key, display] of Object.entries(TEXT_ASSESSMENTS)) {
+    if (!values[key]) continue;
+    observations.push({
+      resourceType: 'Observation',
+      ...vitalsMeta(),
+      code: { text: display },
+      subject: { reference: `Patient/${patientId}` },
+      valueString: values[key],
+    });
+  }
+
+  for (const [key, display] of [['fluidIntake', 'Fluid intake'], ['urineOutput', 'Urine output']]) {
+    if (!values[key]) continue;
+    observations.push({
+      resourceType: 'Observation',
+      ...vitalsMeta(),
+      code: { text: display },
+      subject: { reference: `Patient/${patientId}` },
+      valueQuantity: { value: Number(values[key]), unit: 'mL', system: 'http://unitsofmeasure.org', code: 'mL' },
     });
   }
 
